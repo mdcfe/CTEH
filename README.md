@@ -1,11 +1,8 @@
-Bukkit plugin template
-======================
+# CTEH: Citizens2 Essentials Helper
 
-Basic template to jump-start a Bukkit plugin project.
+## Install
+Get the latest release from [the releases page](https://github.com/md678685/CTEH/releases)
+and drop it into your `plugins/` directory.
 
-Usage
------
-* Clone the template
-* delete .git directory
-* rename packages and classes
-* modify plugin.yml and config.yml accordingly
+When updating, you may want to replace your config - the latest config can always be found
+[here](https://raw.githubusercontent.com/md678685/CTEH/master/src/main/resources/config.yml).
