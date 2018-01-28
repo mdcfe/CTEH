@@ -1,0 +1,17 @@
+name: CTEH
+authors: [md678685]
+version: 0.1
+main: io.github.md678685.minecraft.cteh.CTEH
+
+softdepend: [Vault]
+
+commands:
+  cteh:
+    description: CTEH base command
+    usage:
+      /cteh <subcommand>
+
+permissions:
+  cteh.debug:
+    description: Toggle CTEH debug
+    default: op
