@@ -8,6 +8,7 @@ import net.citizensnpcs.api.event.NPCRemoveEvent;
 import net.citizensnpcs.api.event.NPCSpawnEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.ess3.api.IEssentials;
+import net.ess3.api.IUser;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -17,10 +18,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.UUID;
 
 /**
  * CTEH: Citizens2-Essentials Helper
@@ -46,8 +50,18 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         getServer().getPluginManager().registerEvents(this, this);
     }
 
+    private User getUserForNpc(NPC npc) {
+        User user;
+        if (npc.isSpawned()) {
+            user = ess.getUser(npc.getEntity());
+            if (user != null) return user;
+        }
+        debugLog("Unable to get user by entity; trying UUID...");
+        return ess.getUser(npc.getUniqueId());
+    }
+
     private void tagNpc(NPC npc) {
-        User user = ess.getUser(npc.getUniqueId());
+        User user = getUserForNpc(npc);
         if (user == null) {
             debugLog("tagNpc: User for NPC missing:",
                     "ID:   " + npc.getId(),
@@ -60,7 +74,7 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
     }
 
     private void deleteNpc(NPC npc) {
-        User user = ess.getUser(npc.getUniqueId());
+        User user = getUserForNpc(npc);
         if (user == null) {
             debugLog("deleteNpc: User for NPC missing:",
                     "ID:   " + npc.getId(),
