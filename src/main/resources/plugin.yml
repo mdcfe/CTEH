@@ -3,7 +3,7 @@ authors: [md678685]
 version: 0.1
 main: io.github.md678685.minecraft.cteh.CTEH
 
-softdepend: [Vault]
+softdepend: [Vault, Essentials, Citizens]
 
 commands:
   cteh:
