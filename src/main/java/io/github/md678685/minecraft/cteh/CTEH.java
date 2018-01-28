@@ -2,8 +2,10 @@ package io.github.md678685.minecraft.cteh;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
+import net.citizensnpcs.api.event.NPCCreateEvent;
 import net.citizensnpcs.api.event.NPCEvent;
 import net.citizensnpcs.api.event.NPCRemoveEvent;
+import net.citizensnpcs.api.event.NPCSpawnEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.ess3.api.IEssentials;
 import net.md_5.bungee.api.ChatColor;
@@ -44,13 +46,10 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         getServer().getPluginManager().registerEvents(this, this);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onNPCEvent(NPCEvent event) {
-        NPC npc = event.getNPC();
-
+    private void tagNpc(NPC npc) {
         User user = ess.getUser(npc.getUniqueId());
         if (user == null) {
-            debugLog("(general) User for NPC missing:",
+            debugLog("tagNpc: User for NPC missing:",
                     "ID:   " + npc.getId(),
                     "Name: " + npc.getFullName(),
                     "UUID: " + npc.getUniqueId().toString());
@@ -60,12 +59,10 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         debugLog("Updated Ess config for NPC " + npc.getUniqueId().toString());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onNPCRemoved(NPCRemoveEvent event) {
-        NPC npc = event.getNPC();
+    private void deleteNpc(NPC npc) {
         User user = ess.getUser(npc.getUniqueId());
         if (user == null) {
-            debugLog("(remove) User for NPC missing:",
+            debugLog("deleteNpc: User for NPC missing:",
                     "ID:   " + npc.getId(),
                     "Name: " + npc.getFullName(),
                     "UUID: " + npc.getUniqueId().toString());
@@ -73,6 +70,24 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         }
         user.reset();
         debugLog("Deleted Ess config for NPC " + npc.getUniqueId().toString());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onNPCCreated(NPCCreateEvent event) {
+        if (!tagNpcs) return;
+        tagNpc(event.getNPC());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onNPCSpawned(NPCSpawnEvent event) {
+        if (!tagNpcs) return;
+        tagNpc(event.getNPC());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onNPCRemoved(NPCRemoveEvent event) {
+        if (!autoDelete) return;
+        deleteNpc(event.getNPC());
     }
 
     @Override
