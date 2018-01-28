@@ -39,6 +39,7 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
 
         tagNpcs = this.getConfig().getBoolean("tagNpcs", true);
         autoDelete = this.getConfig().getBoolean("autoDelete", true);
+        isDebug = this.getConfig().getBoolean("debug", false);
         
         getServer().getPluginManager().registerEvents(this, this);
     }

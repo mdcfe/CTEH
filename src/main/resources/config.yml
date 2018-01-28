@@ -1,8 +1,11 @@
 # CTEH: Citizens2 EssentialsX Helper
 # Designed for EssentialsX - not tested with other legacy Essentials versions.
 #
-# tagNpcs: whether to set info.citizens in Essentials to the NPC's id
-# autoDelete: whether to try and delete NPCs from Essentials data
+# tagNpcs: Set info.citizens in Essentials to the NPC's ID when NPC created.
+# autoDelete: Try and delete NPCs from Essentials data when NPC removed.
+# debug: Inform console whenever modifying Essentials data and upon errors.
 
 tagNpcs: true
 autoDelete: true
+
+debug: true
