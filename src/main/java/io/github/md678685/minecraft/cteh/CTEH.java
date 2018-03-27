@@ -2,29 +2,18 @@ package io.github.md678685.minecraft.cteh;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
-import net.citizensnpcs.api.event.NPCCreateEvent;
-import net.citizensnpcs.api.event.NPCEvent;
-import net.citizensnpcs.api.event.NPCRemoveEvent;
-import net.citizensnpcs.api.event.NPCSpawnEvent;
+import me.lucko.helper.plugin.ExtendedJavaPlugin;
 import net.citizensnpcs.api.npc.NPC;
 import net.ess3.api.IEssentials;
-import net.ess3.api.IUser;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.UUID;
 
 /**
  * CTEH: Citizens2-Essentials Helper
@@ -32,25 +21,26 @@ import java.util.UUID;
  * @author MD678685
  * @version 0.1
  */
-public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
+public class CTEH extends ExtendedJavaPlugin {
     private static IEssentials ess = Essentials.getPlugin(Essentials.class);
 
-    private static boolean tagNpcs = true;
-    private static boolean autoDelete = true;
+    static boolean tagNpcs = true;
+    static boolean autoDelete = true;
     private static boolean isDebug = false;
 
     @Override
-    public void onEnable() {
-        this.reloadConfig();
+    public void enable() {
+        this.loadConfig("config.yml");
 
         tagNpcs = this.getConfig().getBoolean("tagNpcs", true);
         autoDelete = this.getConfig().getBoolean("autoDelete", true);
         isDebug = this.getConfig().getBoolean("debug", false);
-        
-        getServer().getPluginManager().registerEvents(this, this);
+
+        CTEHCommands.register(this);
+        CTEHEvents.register(this);
     }
 
-    private User getUserForNpc(NPC npc) {
+    public User getUserForNpc(NPC npc) {
         User user;
         if (npc.isSpawned()) {
             user = ess.getUser(npc.getEntity());
@@ -60,7 +50,7 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         return ess.getUser(npc.getUniqueId());
     }
 
-    private void tagNpc(NPC npc) {
+    public void tagNpc(NPC npc) {
         User user = getUserForNpc(npc);
         if (user == null) {
             debugLog("tagNpc: User for NPC missing:",
@@ -73,7 +63,7 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         debugLog("Updated Ess config for NPC " + npc.getUniqueId().toString());
     }
 
-    private void deleteNpc(NPC npc) {
+    public void deleteNpc(NPC npc) {
         User user = getUserForNpc(npc);
         if (user == null) {
             debugLog("deleteNpc: User for NPC missing:",
@@ -86,44 +76,12 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         debugLog("Deleted Ess config for NPC " + npc.getUniqueId().toString());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onNPCCreated(NPCCreateEvent event) {
-        if (!tagNpcs) return;
-        tagNpc(event.getNPC());
+    boolean toggleDebug() {
+        isDebug = !isDebug;
+        return isDebug;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onNPCSpawned(NPCSpawnEvent event) {
-        if (!tagNpcs) return;
-        tagNpc(event.getNPC());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onNPCRemoved(NPCRemoveEvent event) {
-        if (!autoDelete) return;
-        deleteNpc(event.getNPC());
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length < 1) return false;
-        switch (args[0]) {
-            case "debug":
-                if (!sender.hasPermission("cteh.debug")) {
-                    this.inform(sender, "You don't have permission to toggle debug mode.");
-                    return true;
-                }
-
-                isDebug = !isDebug;
-                this.inform(sender, "Debug mode " + (isDebug ? "enabled" : "disabled") + ".");
-                return true;
-
-            default:
-                return false;
-        }
-    }
-
-    private void inform(CommandSender sender, String msg) {
+    void inform(CommandSender sender, String msg) {
         BaseComponent[] components = new ComponentBuilder("[CTEH] ")
                 .color(ChatColor.GREEN)
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -137,7 +95,7 @@ public class CTEH extends JavaPlugin implements Listener, CommandExecutor {
         this.getLogger().info(sender.getName() + ": " + msg);
     }
 
-    private void debugLog(String ...msgs) {
+    void debugLog(String ...msgs) {
         if (isDebug) {
             for (String msg : msgs) {
                 this.getLogger().info("DEBUG: " + msg);

@@ -27,8 +27,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -67,6 +67,12 @@
                             <exclude>org.apache.derby:derby</exclude>
                         </excludes>
                     </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>me.lucko.helper</pattern>
+                            <shadedPattern>io.github.md678685.minecraft.cteh.helper</shadedPattern>
+                        </relocation>
+                    </relocations>
                 </configuration>
                 <executions>
                     <execution>
@@ -106,10 +112,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
+            <groupId>me.lucko</groupId>
+            <artifactId>helper</artifactId>
+            <version>4.2.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
