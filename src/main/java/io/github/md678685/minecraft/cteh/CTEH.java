@@ -3,17 +3,15 @@ package io.github.md678685.minecraft.cteh;
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import me.lucko.helper.plugin.ExtendedJavaPlugin;
+import me.lucko.helper.plugin.ap.Plugin;
 import net.citizensnpcs.api.npc.NPC;
 import net.ess3.api.IEssentials;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * CTEH: Citizens2-Essentials Helper
@@ -21,6 +19,14 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author MD678685
  * @version 0.1
  */
+@Plugin(
+        name = "CTEH",
+        version = "${full.version}",
+        description = "A plugin to ease managing Essentials user data for Citizens2 NPCs.",
+        authors = {"MD678685"},
+        website = "https://github.com/md678685/CTEH/",
+        hardDepends = {"Essentials", "Citizens"}
+)
 public class CTEH extends ExtendedJavaPlugin {
     private static IEssentials ess = Essentials.getPlugin(Essentials.class);
 
