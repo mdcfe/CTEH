@@ -2,9 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.md678685.minecraft</groupId>
     <artifactId>CTEH</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2</version>
 
     <build>
+        <finalName>CTEH-${full.version}</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -83,6 +84,30 @@
                     </execution>
                 </executions>
             </plugin>
+                <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <skipPoms>false</skipPoms>
+
+                    <runOnlyOnce>true</runOnlyOnce>
+                    <injectAllReactorProjects>true</injectAllReactorProjects>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+
+                    <gitDescribe>
+                        <tags>true</tags>
+                    </gitDescribe>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -115,6 +140,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- The plugin's build number -->
+        <build.version>${git.closest.tag.commit.count}</build.version>
+
+        <!-- The plugin's full version number -->
+        <full.version>${project.version}.${build.version}</full.version>
     </properties>
 
     <repositories>
@@ -135,5 +166,4 @@
             <url>http://ci.citizensnpcs.co/plugin/repository/everything/</url>
         </repository>
     </repositories>
-
 </project>
